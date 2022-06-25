@@ -1,0 +1,51 @@
+.fav-book-cont {
+  display: flex;
+  margin-right: 15px;
+}
+.fav-image-icon {
+  width: 120px;
+  height: 150px;
+  border-radius: 8px;
+}
+.fav-remove-icon {
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  width: 15px;
+  height: 15px;
+}
+.fav-book-content-cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.fav-title {
+  width: 120px;
+  margin-top: 2px;
+}
+@media screen and (max-width: 576px) {
+  .fav-image-icon {
+    width: 100px;
+    height: 120px;
+    border-radius: 7px;
+  }
+  .fav-book-cont {
+    display: flex;
+    margin-right: 10px;
+  }
+  .fav-remove-icon {
+    width: 10px;
+    height: 10px;
+    margin-left: -13px;
+  }
+  .fav-title {
+    width: 120px;
+    font-size: 10px;
+    text-align: center;
+    font-weight: 700;
+  }
+}
+.p-dark {
+  color: aliceblue;
+}
