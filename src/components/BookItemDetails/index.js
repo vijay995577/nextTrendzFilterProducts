@@ -1,223 +1,143 @@
+import Loader from 'react-loader-spinner'
 import {Component} from 'react'
 import Cookies from 'js-cookie'
-import Loader from 'react-loader-spinner'
-
 import {BsFillStarFill} from 'react-icons/bs'
-import {AiFillHeart} from 'react-icons/ai'
-import HeaderContext from '../../HeaderContext/HeaderContext'
+
 import Header from '../Header'
 import Footer from '../Footer'
+import FailureView from '../FailureView'
 
 import './index.css'
-import SmallNavCont from '../SmallNavCont'
+
+const apiStatusConstant = {
+  initial: 'initial',
+  inProgress: 'inProgress',
+  success: 'success',
+  failure: 'failure',
+}
 
 class BookItemDetails extends Component {
-  state = {bookData: {}, dataStatus: 'loading'}
-
-  componentDidMount() {
-    this.getBookItemData()
+  state = {
+    apiStatus: apiStatusConstant.initial,
+    bookDetails: {},
   }
 
-  getBookItemData = async () => {
+  componentDidMount() {
+    this.getBook()
+  }
+
+  getFormatData = data => {
+    const bookDetails = data.book_details
+
+    const updatedData = {
+      aboutAuthor: bookDetails.about_author,
+      aboutBook: bookDetails.about_book,
+      authorName: bookDetails.author_name,
+      coverPic: bookDetails.cover_pic,
+      id: bookDetails.id,
+      readStatus: bookDetails.read_status,
+      rating: bookDetails.rating,
+      title: bookDetails.title,
+    }
+    this.setState({
+      bookDetails: updatedData,
+      apiStatus: apiStatusConstant.success,
+    })
+  }
+
+  getBook = async () => {
+    this.setState({
+      apiStatus: apiStatusConstant.inProgress,
+    })
+    const jwtToken = Cookies.get('jwt_token')
     const {match} = this.props
     const {params} = match
-    const bookId = params.id
-    const url = `https://apis.ccbp.in/book-hub/books/${bookId}`
-    const jwtToken = Cookies.get('jwt_token')
+    const {id} = params
+    const url = `https://apis.ccbp.in/book-hub/books/${id}`
     const options = {
-      method: 'GET',
       headers: {
         Authorization: `Bearer ${jwtToken}`,
       },
+      method: 'GET',
     }
-    // console.log(id)
     const response = await fetch(url, options)
-    const data = await response.json()
     if (response.ok === true) {
-      const book = data.book_details
-      console.log(book)
-      const updatedData = {
-        authorName: book.author_name,
-        coverPic: book.cover_pic,
-        aboutBook: book.about_book,
-        rating: book.rating,
-        readStatus: book.read_status,
-        title: book.title,
-        aboutAuthor: book.about_author,
-      }
-      this.setState({bookData: updatedData, dataStatus: 'success'})
+      const fetchedData = await response.json()
+      this.getFormatData(fetchedData)
     } else {
       this.setState({
-        dataStatus: 'failure',
+        apiStatus: apiStatusConstant.failure,
       })
     }
   }
 
-  getBookItemDetails = () => {
-    const {bookData} = this.state
+  renderBookItemDetails = () => {
+    const {bookDetails} = this.state
     const {
-      title,
+      aboutAuthor,
+      aboutBook,
       authorName,
       coverPic,
-      aboutBook,
-      rating,
+
       readStatus,
-      aboutAuthor,
-    } = bookData
-
+      rating,
+      title,
+    } = bookDetails
     return (
-      <HeaderContext.Consumer>
-        {value => {
-          const {theme, onClickFavIcon} = value
-
-          const {match} = this.props
-          const {params} = match
-          const bookId = params.id
-
-          const homeCont = theme ? 'dark-home' : ''
-          const heading = theme ? 'h1-dark' : ''
-          const innerCont = theme ? 'slick-dark' : ''
-          const para = theme ? 'p-dark' : ''
-
-          const onClickFavBtn = () => {
-            onClickFavIcon(bookId)
-            console.log(bookId)
-          }
-
-          return (
-            <>
-              <div className={`book-item-details-cont ${homeCont}`}>
-                <div className={`book-details-cont ${innerCont}`}>
-                  <div className="book-details-items-cont">
-                    <img src={coverPic} alt={title} className="book-image" />
-                    <div className="books-content-cont ">
-                      <h1 className={`shelf-book-title ${heading}`}>{title}</h1>
-                      <p className={`shelf-author-name ${para}`}>
-                        {authorName}
-                      </p>
-                      <div className="rating-cont">
-                        <p className={`shelf-book-rating ${para}`}>
-                          Avg Rating
-                        </p>
-                        <BsFillStarFill
-                          color="#FBBF24"
-                          size={15}
-                          className="star-icon"
-                        />
-                        <p className={`${para}`}> {rating}</p>
-                      </div>
-                      <p className={`shelf-book-status ${para}`}>
-                        Status:{' '}
-                        <span className="status-text">{readStatus}</span>
-                      </p>
-                      <button
-                        type="button"
-                        className="add-to-fav"
-                        onClick={onClickFavBtn}
-                      >
-                        Add to Favourites <AiFillHeart color="red" />
-                      </button>
-                    </div>
-                  </div>
-                  <hr className="book-item-line" />
-                  <div>
-                    <h1 className={`item-heading ${heading}`}>About Author</h1>
-                    <p className={`item-desc ${para}`}>{aboutAuthor}</p>
-                    <h1 className={`item-heading ${heading}`}>About Book</h1>
-                    <p className={`item-desc ${para}`}>{aboutBook}</p>
-                  </div>
-                </div>
-              </div>
-              {/*  small device output */}
-
-              <div className={`small-book-item-details-cont ${homeCont}`}>
-                <div className={`small-book-details-items-cont ${homeCont}`}>
-                  <img
-                    src={coverPic}
-                    alt={title}
-                    className="small-book-image"
-                  />
-                  <div className={`small-books-content-cont ${homeCont}`}>
-                    <h1 className={`small-shelf-book-title ${para}`}>
-                      {title}
-                    </h1>
-                    <p className={`small-shelf-author-name ${para}`}>
-                      {authorName}
-                    </p>
-                    <div className="small-rating-cont">
-                      <p className={`small-shelf-book-rating ${para}`}>
-                        Avg Rating
-                      </p>
-                      <BsFillStarFill
-                        color="#FBBF24"
-                        size={15}
-                        className="small-star-icon"
-                      />
-                      <p className={`small-rating ${para}`}> {rating}</p>
-                    </div>
-                    <p className={`small-shelf-book-status ${para}`}>
-                      Status: <span className="status-text">{readStatus}</span>
-                    </p>
-                    <button
-                      type="button"
-                      className={`small-add-to-fav ${para}`}
-                      onClick={onClickFavBtn}
-                    >
-                      Add to Favourites <AiFillHeart color="red" />
-                    </button>
-                  </div>
-                </div>
-                <hr className="small-line" />
-                <div>
-                  <h1 className={`small-item-heading ${heading}`}>
-                    About Author
-                  </h1>
-                  <p className={`small-item-desc ${para}`}>{aboutAuthor}</p>
-                  <h1 className={`small-item-heading ${heading}`}>
-                    About Book
-                  </h1>
-                  <p className={`small-item-desc ${para}`}>{aboutBook}</p>
-                </div>
-              </div>
-            </>
-          )
-        }}
-      </HeaderContext.Consumer>
+      <div className="book-item-details-success-view" testid="bookItem">
+        <div className="book-item-details-sub-container">
+          <img src={coverPic} alt={title} className="book-item-details-image" />
+          <div className="book-item-details-text-container">
+            <h1 className="book-item-details-title">{title}</h1>
+            <p className="book-item-author-rating-status">{authorName}</p>
+            <div className="book-item-details-rating-container">
+              <p className="book-item-author-rating-status">Avg Rating</p>
+              <BsFillStarFill className="book-item-details-star" />
+              <p className="book-item-author-rating-status">{rating}</p>
+            </div>
+            <div className="book-item-details-read-status-container">
+              <p className="book-item-author-rating-status">Status:</p>
+              <p className="book-item-read-status">{readStatus}</p>
+            </div>
+          </div>
+        </div>
+        <hr className="book-item-details-line" />
+        <div className="book-item-details-author-details-container">
+          <h1 className="book-item-details-author-heading">About Author</h1>
+          <p className="book-item-details-author-description">{aboutAuthor}</p>
+        </div>
+        <div className="book-item-details-author-details-container">
+          <h1 className="book-item-details-author-heading">About Book</h1>
+          <p className="book-item-details-author-description">{aboutBook}</p>
+        </div>
+      </div>
     )
   }
 
-  onclickTryAgainBtn = () => {
-    this.getBookItemData()
+  renderBookItemLoader = () => (
+    <div testid="loader">
+      <Loader type="Oval" color="#0b69ff" height="50" width="50" />
+    </div>
+  )
+
+  onClickTryAgin = () => {
+    this.getBook()
   }
 
-  getFailureImage = () => (
-    <div>
-      <img
-        src="https://res.cloudinary.com/harira/image/upload/v1650042814/BookHub/Group_7522_uhwe2g.jpg"
-        alt="failure view"
-      />
-      <p>Something went wrong. Please try again</p>
-      <button type="button" onClick={this.onclickTryAgainBtn}>
-        Try Again
-      </button>
-    </div>
+  renderBookItemFailureView = () => (
+    <FailureView onClickTryAgin={this.onClickTryAgin} />
   )
 
-  getLoader = () => (
-    <div testid="loader">
-      <Loader type="TailSpin" color="#00BFFF" height={50} width={50} />
-    </div>
-  )
+  renderBookDetails = () => {
+    const {apiStatus} = this.state
 
-  getDataOnTheBasicsOfStatus = () => {
-    const {dataStatus} = this.state
-    switch (dataStatus) {
-      case 'loading':
-        return this.getLoader()
-      case 'success':
-        return this.getBookItemDetails()
-      case 'failure':
-        return this.getFailureImage()
+    switch (apiStatus) {
+      case apiStatusConstant.success:
+        return this.renderBookItemDetails()
+      case apiStatusConstant.inProgress:
+        return this.renderBookItemLoader()
+      case apiStatusConstant.failure:
+        return this.renderBookItemFailureView()
       default:
         return null
     }
@@ -225,22 +145,15 @@ class BookItemDetails extends Component {
 
   render() {
     return (
-      <HeaderContext.Consumer>
-        {value => {
-          const {showNavCont} = value
-
-          return (
-            <>
-              <Header />
-              {showNavCont ? <SmallNavCont /> : ''}
-              <div className="blog-container">
-                {this.getDataOnTheBasicsOfStatus()}
-                <Footer />
-              </div>
-            </>
-          )
-        }}
-      </HeaderContext.Consumer>
+      <>
+        <Header />
+        <div className="book-details-container">
+          {this.renderBookDetails()}
+          <div className="book-item-details-footer">
+            <Footer />
+          </div>
+        </div>
+      </>
     )
   }
 }

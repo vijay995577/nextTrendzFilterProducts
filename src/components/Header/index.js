@@ -1,143 +1,112 @@
 import {Component} from 'react'
+
 import {Link, withRouter} from 'react-router-dom'
+import {FaBars} from 'react-icons/fa'
+
+import {AiFillCloseCircle} from 'react-icons/ai'
 import Cookies from 'js-cookie'
-import {FaMoon, FaBars} from 'react-icons/fa'
-import {BsSun} from 'react-icons/bs'
 
 import './index.css'
-import HeaderContext from '../../HeaderContext/HeaderContext'
 
 class Header extends Component {
+  state = {
+    isClick: false,
+  }
+
+  onClickLogout = () => {
+    const {history} = this.props
+    Cookies.remove('jwt_token')
+    history.replace('/login')
+  }
+
+  scrollOptions = () => (
+    <ul className="options-container">
+      <li className="nav-menu-item">
+        <Link to="/" className="nav-link">
+          Home
+        </Link>
+      </li>
+      <li className="nav-menu-item">
+        <Link to="/shelf" className="nav-link">
+          Bookshelves
+        </Link>
+      </li>
+      <button className="logout-desktop-button" type="button">
+        Logout
+      </button>
+      <button
+        type="button"
+        className="close-button"
+        onClick={this.onClickNavbar}
+      >
+        <AiFillCloseCircle className="close-logo" />
+      </button>
+    </ul>
+  )
+
+  onClickNavbar = () => {
+    this.setState(prevState => ({
+      isClick: !prevState.isClick,
+    }))
+  }
+
   render() {
+    const {isClick} = this.state
+
     return (
-      <HeaderContext.Consumer>
-        {value => {
-          const {
-            activeLink,
-            onClickBookShelves,
-            onClickHome,
-            theme,
-            onClickThemeChanger,
-            oncClickFavouriteLink,
-            onClickNavIcon,
-          } = value
-
-          const onClickNavButton = () => {
-            onClickNavIcon()
-          }
-
-          const onClickLogout = () => {
-            const {history} = this.props
-            Cookies.remove('jwt_token')
-            history.replace('/login')
-          }
-
-          const onClickHomeLink = () => {
-            onClickHome()
-          }
-
-          const onClickShelf = () => {
-            onClickBookShelves()
-          }
-
-          const themeChanger = () => {
-            onClickThemeChanger()
-          }
-          const onClickFavourite = () => {
-            oncClickFavouriteLink()
-          }
-
-          const headerCont = theme ? 'dark' : ''
-          const iconColor = theme ? 'white' : 'black'
-          return (
-            <div className={`nav-cont ${headerCont}`}>
+      <nav className="nav-header" fixed="true">
+        <div className="nav-content">
+          <div className="navbar-mobile-logo-main-container">
+            <div className="navbar-mobile-logo-container">
               <Link to="/">
-                {theme ? (
-                  <h1 className="navbar-logo-dark">Book Hub</h1>
-                ) : (
-                  <img
-                    src="https://res.cloudinary.com/harira/image/upload/v1649770777/BookHub/Group_7731_xjdbqj.jpg"
-                    alt="website logo"
-                    className="navbar-logo"
-                  />
-                )}
+                <img
+                  src="https://res.cloudinary.com/saikrishnaboga-ccbp-tech/image/upload/v1643539861/Book-Hub%20/Group_7731login-B-logo_vneo4x.png"
+                  alt="website logo"
+                  className="website-logo"
+                />
               </Link>
-              <div className="nav-icon">
-                <button
-                  type="button"
-                  className="nav-btn"
-                  onClick={onClickNavButton}
-                >
-                  <FaBars color={iconColor} />
-                </button>
-              </div>
-
-              <ul className="nav-links-cont">
-                <li className="nav-links">
-                  <button
-                    type="button"
-                    onClick={themeChanger}
-                    className="theme-btn"
-                  >
-                    {theme ? (
-                      <BsSun color="#ffffff" size={20} />
-                    ) : (
-                      <FaMoon size={20} />
-                    )}
-                  </button>
-                </li>
-
-                <li className="nav-links">
-                  <Link
-                    to="/"
-                    className={
-                      activeLink === 'home' ? 'nav-links active' : 'nav-links'
-                    }
-                    onClick={onClickHomeLink}
-                  >
-                    <p>Home</p>
-                  </Link>
-                </li>
-                <li className="nav-links">
-                  <Link
-                    to="/shelf"
-                    className={
-                      activeLink === 'bookShelf'
-                        ? 'nav-links active'
-                        : 'nav-links'
-                    }
-                    onClick={onClickShelf}
-                  >
-                    <p>Bookshelves</p>
-                  </Link>
-                </li>
-                <li className="nav-links">
-                  <Link
-                    to="/fav"
-                    className={
-                      activeLink === 'favourite'
-                        ? 'nav-links active'
-                        : 'nav-links'
-                    }
-                    onClick={onClickFavourite}
-                  >
-                    <p>Favourite</p>
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="logout-btn"
-                    onClick={onClickLogout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
+              <button
+                type="button"
+                className="nav-bars-button"
+                onClick={this.onClickNavbar}
+              >
+                <FaBars className="nav-bars" />
+              </button>
             </div>
-          )
-        }}
-      </HeaderContext.Consumer>
+            <div className="scroll-options-container">
+              {isClick && this.scrollOptions()}
+            </div>
+          </div>
+          <div className="navbar-desktop-container">
+            <Link to="/" className="nav-link">
+              <img
+                src="https://res.cloudinary.com/saikrishnaboga-ccbp-tech/image/upload/v1643539861/Book-Hub%20/Group_7731login-B-logo_vneo4x.png"
+                alt="website logo"
+                className="website-logo"
+              />
+            </Link>
+            <ul className="nav-menu">
+              <li className="nav-menu-item">
+                <Link to="/" className="nav-link">
+                  Home
+                </Link>
+              </li>
+              <li className="nav-menu-item">
+                <Link to="/shelf" className="nav-link">
+                  Bookshelves
+                </Link>
+              </li>
+              <button
+                className="logout-desktop-button"
+                onClick={this.onClickLogout}
+                type="button"
+              >
+                Logout
+              </button>
+            </ul>
+          </div>
+        </div>
+      </nav>
     )
   }
 }

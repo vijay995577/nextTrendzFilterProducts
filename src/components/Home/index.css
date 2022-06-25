@@ -1,59 +1,62 @@
-.home-cont {
-  width: 100%;
-  height: 88vh;
-  background: #f5f7fa;
+.home-main-container {
+  background-color: #e5e5e5;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 88vh;
+  margin-top: 0px;
+}
+.home-container {
+  width: 80%;
 }
 .home-heading {
-  font-family: 'Roboto';
+  font-family: 'Inter';
+  font-size: 24px;
   font-weight: 600;
-  font-size: 30px;
-  line-height: 64px;
-  display: flex;
-  align-items: center;
-  color: #1e293b;
-  margin-left: 100px;
+  color: #000000;
 }
-.home-desc {
-  font-family: 'Roboto';
-  font-weight: 500;
+.home-heading-description {
+  font-family: 'Inter';
   font-size: 18px;
-  color: #475569;
-  margin-left: 100px;
-  width: 998px;
-  margin-top: -15px;
-}
-.find-books-cont {
-  display: none;
-}
-@media screen and (max-width: 576px) {
-  .home-desc {
-    width: 300px;
-    margin-left: 15px;
-    font-size: 14px;
-  }
-  .home-heading {
-    font-size: 18px;
-    margin-left: 15px;
-    margin-top: -65px;
-  }
-  .find-books-cont {
-    display: block;
-    margin-left: 15px;
-    margin-bottom: 15px;
-  }
-  .home-cont {
-    justify-content: center;
-  }
+  font-weight: 300;
+  color: #000000;
 }
 
-.h1-dark {
+.slider-show-container {
+  height: 393px;
+  width: 80%;
+  background-color: blanchedalmond;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 16px;
+  background-color: #ffffff;
+  margin-bottom: 25px;
+}
+/* for top rated books and find button */
+.top-rated-books-and-find-books {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.find-books-button {
+  padding: 8px 16px;
+  background-color: #0284c7;
+  border-radius: 5px;
   color: #ffffff;
+  font-size: 14px;
+  font-weight: 300;
+  font-family: 'Inter';
+  outline: none;
+  border: none;
+  cursor: pointer;
 }
-.p-dark {
-  color: #dadfe7;
-}
-.dark-home {
-  background-color: rgb(26, 25, 25);
+
+.top-rated-books {
+  color: #1e293b;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Roboto';
 }

@@ -1,32 +1,37 @@
-.contact-cont {
-  width: 100%;
+.footer-section-main-container {
   display: flex;
   flex-direction: column;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-}
-.list-cont {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 0px;
-  list-style-type: none;
-}
-.contact-btn {
-  border: none;
   background-color: transparent;
-  cursor: pointer;
-  outline: none;
 }
-.contact-us {
-  font-family: 'Roboto';
-  font-weight: 600;
-  font-size: 12px;
+.footer-icons-container {
+  display: flex;
+  justify-content: space-between;
+  width: 150px;
+}
+.footer-icon {
   color: #3d3c3c;
-  text-align: center;
-  margin-top: -5px;
+  font-size: 13.7143px;
 }
-.h1-dark {
-  color: #ffffff;
+@media screen and (min-width: 768px) {
+  .footer-icon {
+    font-size: 18px;
+    line-height: 21px;
+  }
+}
+
+.footer-title {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 14px;
+  text-align: center;
+  color: #3d3c3c;
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .footer-title {
+    font-size: 13px;
+  }
 }

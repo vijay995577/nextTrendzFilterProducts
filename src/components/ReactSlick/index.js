@@ -1,22 +1,26 @@
 import {Component} from 'react'
 import {Link} from 'react-router-dom'
-import Cookies from 'js-cookie'
 import Slider from 'react-slick'
-import Loader from 'react-loader-spinner'
-
-import HeaderContext from '../../HeaderContext/HeaderContext'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
+/* Add css to your project */
 import './index.css'
 
 const settings = {
   dots: false,
-  infinite: true,
+  infinite: false,
   speed: 500,
   slidesToShow: 4,
   slidesToScroll: 1,
   responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 1,
+      },
+    },
     {
       breakpoint: 600,
       settings: {
@@ -35,162 +39,34 @@ const settings = {
 }
 
 class ReactSlick extends Component {
-  state = {topRatedList: [], dataStatus: 'loading'}
-
-  componentDidMount() {
-    this.getBooksData()
-  }
-
-  getBooksData = async () => {
-    const jwtToken = Cookies.get('jwt_token')
-    const url = 'https://apis.ccbp.in/book-hub/top-rated-books'
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    }
-    const response = await fetch(url, options)
-    const data = await response.json()
-    // console.log(data.books)
-
-    if (response.ok === true) {
-      this.setState({
-        dataStatus: 'success',
-      })
-      const formattedData = data.books.map(eachBook => ({
-        id: eachBook.id,
-        authorName: eachBook.author_name,
-        coverPic: eachBook.cover_pic,
-        title: eachBook.title,
-      }))
-
-      this.setState(
-        {
-          topRatedList: formattedData,
-        },
-        this.getSuccessData,
-      )
-    } else {
-      this.setState({
-        dataStatus: 'failure',
-      })
-    }
-  }
-
   renderSlider = () => {
-    const {topRatedList} = this.state
+    const {topRatedBooks} = this.props
+
     return (
-      <HeaderContext.Consumer>
-        {value => {
-          const {theme} = value
-          const heading = theme ? 'h1-dark' : ''
-          const para = theme ? 'p-dark' : ''
+      <Slider {...settings}>
+        {topRatedBooks.map(eachLogo => {
+          const {id, coverPic, title, authorName} = eachLogo
           return (
-            <Slider {...settings}>
-              {topRatedList.map(eachLogo => {
-                const {id, coverPic, title, authorName} = eachLogo
-                return (
-                  <li key={id}>
-                    <Link to={`/books/${id}`}>
-                      <div className="slick-item">
-                        <img
-                          className="slick-logo-image"
-                          src={coverPic}
-                          alt={title}
-                        />
-                        <h1 className={`book-title ${heading}`}>{title}</h1>
-                        <p className={`author-name ${para}`}>{authorName}</p>
-                      </div>
-                    </Link>
-                  </li>
-                )
-              })}
-            </Slider>
+            <ul className="slick-item home-book-list" key={id}>
+              <li>
+                <Link to={`/books/${id}`} className="home-link-item">
+                  <img className="logo-image" src={coverPic} alt={title} />
+                  <h1 className="top-rated-book-heading">{title}</h1>
+                  <p className="top-rated-book-author">{authorName}</p>
+                </Link>
+              </li>
+            </ul>
           )
-        }}
-      </HeaderContext.Consumer>
+        })}
+      </Slider>
     )
-  }
-
-  getSuccessData = () => (
-    <HeaderContext.Consumer>
-      {value => {
-        const {theme} = value
-        const slickCont = theme ? 'slick-dark' : ''
-        return (
-          <ul className={`slick-container ${slickCont}`}>
-            {this.renderSlider()}
-          </ul>
-        )
-      }}
-    </HeaderContext.Consumer>
-  )
-
-  getLoadingSpinner = () => (
-    <div testid="loader">
-      <Loader type="TailSpin" color="#00BFFF" height={50} width={50} />
-    </div>
-  )
-
-  onclickTryAgainBtn = () => {
-    this.getBooksData()
-  }
-
-  getErrorImage = () => (
-    <div>
-      <img
-        src="https://res.cloudinary.com/harira/image/upload/v1650042814/BookHub/Group_7522_uhwe2g.jpg"
-        alt="failure view"
-      />
-      <p>Something went wrong. Please try again</p>
-      <button type="button" onClick={this.onclickTryAgainBtn}>
-        Try Again
-      </button>
-    </div>
-  )
-
-  getDataBasedOnStatus = () => {
-    const {dataStatus} = this.state
-    switch (dataStatus) {
-      case 'loading':
-        return this.getLoadingSpinner()
-      case 'success':
-        return this.getSuccessData()
-      case 'failure':
-        return this.getErrorImage()
-      default:
-        return null
-    }
   }
 
   render() {
     return (
-      <HeaderContext.Consumer>
-        {value => {
-          const {theme} = value
-
-          const slickCont = theme ? 'slick-dark' : ''
-          const heading = theme ? 'h1-dark' : ''
-          return (
-            <div className={`main-container ${slickCont}`}>
-              <div className="heading-button-cont">
-                <h1 className={`topRated-books-text ${heading}`}>
-                  Top Rated Books
-                </h1>
-                <div className="find-books-slick">
-                  <Link to="/shelf">
-                    <button type="button" className="topRated-btn">
-                      Find Books
-                    </button>
-                  </Link>
-                </div>
-              </div>
-              {this.getDataBasedOnStatus()}
-            </div>
-          )
-        }}
-      </HeaderContext.Consumer>
+      <div className="main-container">
+        <div className="slick-container">{this.renderSlider()}</div>
+      </div>
     )
   }
 }

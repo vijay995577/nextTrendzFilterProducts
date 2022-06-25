@@ -1,114 +1,58 @@
 .main-container {
   display: flex;
   flex-direction: column;
-  padding-top: 10px;
+  justify-content: center;
   align-items: center;
-  width: 90%;
-  height: 370px;
-  margin-left: 90px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  margin-bottom: 35px;
+  width: 100%;
+  flex-wrap: wrap;
 }
+
 .slick-container {
-  width: 90%;
-  list-style-type: none;
-  padding-left: 0px;
+  width: 80%;
+  max-width: 1100px;
+  margin-top: 10px;
 }
 
-.heading-button-cont {
-  width: 90%;
+.logo-image {
+  margin: 0px 10px;
+  height: 120px;
+  width: 150px;
+}
+
+.slick-item {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-}
-.find-books-slick {
-  display: flex;
-}
-.topRated-books-text {
-  width: 195px;
-  height: 32px;
-  font-family: 'Roboto';
-  font-weight: 600;
-  font-size: 24px;
-  color: #1e293b;
-}
-@media screen and (max-width: 576px) {
-  .find-books-slick {
-    display: none;
-  }
-  .main-container {
-    width: 100%;
-    height: 230px;
-    margin-left: 0px;
-  }
-  .topRated-books-text {
-    width: 195px;
-    height: 10px;
-    font-family: 'Roboto';
-    font-weight: 600;
-    font-size: 20px;
-  }
-  .slick-container {
-    width: 85%;
-  }
+  flex-wrap: wrap;
 }
 
-.topRated-btn {
-  width: 104px;
-  height: 36px;
-  margin-right: 30px;
-  background: #0284c7;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  outline: none;
+/* You can change the CSS color to style the Next and 
+Previous Arrow buttons according to your project */
 
-  font-family: 'Roboto';
-  font-weight: 500;
-  font-size: 12px;
-  color: #f8fafc;
-}
-
-.slick-logo-image {
-  width: 303px;
-  height: 200px;
-  border-radius: 8px;
-}
 .slick-prev:before,
 .slick-next:before {
   color: black;
 }
-.book-title {
-  font-family: 'Roboto';
-  font-weight: 600;
-  font-size: 18px;
-  text-align: center;
-  color: #334155;
+.home-book-list {
+  list-style-type: none;
 }
-.author-name {
-  font-family: 'Roboto';
-  font-weight: 400;
-  font-size: 12px;
-  text-align: center;
-  color: #475569;
+.home-link-item {
+  text-decoration: none;
+  color: black;
 }
 
-@media screen and (max-width: 576px) {
-  .slick-logo-image {
-    width: 130px;
-    height: 90px;
-    border-radius: 8px;
-  }
-  .book-title {
-    font-size: 12px;
-    text-align: left;
-  }
-  .author-name {
-    font-size: 11px;
-    text-align: left;
-  }
+.top-rated-book-heading {
+  font-family: 'Roboto';
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  width: 150px;
 }
-.slick-dark {
-  background-color: #222327;
+.top-rated-book-author {
+  font-family: 'Roboto';
+  font-size: 8px;
+  font-weight: 600;
+  text-align: center;
+  width: 150px;
 }
